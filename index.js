@@ -20,23 +20,26 @@ var traffic_info=[];
 var routes=[];
 function startAlgorithm()
 {
-	console.log("-------Traffic Signal Optimatization algorithm - start --------------\n");
+	console.log("-------Traffic Signal Optimitization algorithm - start --------------\n");
 
-	loadTrafficInformation(function(){
+	loadTrafficInformation(runAlgorithm);
+}
+
+function runAlgorithm(){
 
 		routes=findRoutes(routeFrom,routeTo,traffic_info);
-		console.log('the plotted routes are');
+		console.log('----the plotted routes are');
 		routes.forEach(function(route){
 			console.log(route);
 		});
-	});
-}
 
+		console.log("-------Traffic Signal Optimitization algorithm - end --------------\n");
 
+	}
 
 function areRoutePointsAvailableInTrafficInfo(routeFrom,routeTo)
 {
-	console.log('making sure the route points are available');
+	console.log('----making sure the route points are available');
 	routeFromFlag=false;
 	routeToFlag=false;
 	traffic_info.forEach(function(trafficPoint){
@@ -72,7 +75,7 @@ function findRoutes(routeFrom,routeTo,traffic_info)
 	routes=[];
 	if(areRoutePointsAvailableInTrafficInfo(routeFrom,routeTo))
 	{
-		console.log('Route points are available');
+		console.log('----Route points are available');
 		secondTrafficPoint=null;
 		traffic_info.forEach(function(trafficPoint){
          
@@ -96,14 +99,14 @@ function findRoutes(routeFrom,routeTo,traffic_info)
 	}
 	else
 	{
-		console.log('Route points are not available');
+		console.log('----Route points are not available');
 	}
 	return routes;
 }
 
 function loadTrafficInformation(callback)
 {
-	console.log('---- Starting to load traffic data');
+	console.log('----Starting to load traffic data');
 		
 	var csvFilePath='trafficdata.csv';
 	
@@ -114,7 +117,7 @@ function loadTrafficInformation(callback)
 	    //console.log(jsonObj);
 	})
 	.on('done',(error)=>{
-	    console.log('-------Traffic Information loaded --------');
+	    console.log('----Traffic Information loaded');
 	    callback();
 	});	
 }

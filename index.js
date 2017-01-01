@@ -16,7 +16,7 @@ Note
 var routeFrom='P001';
 var routeTo='P005';
 
-var traffic_info=[];
+var routeInfo=[];
 var routes=[];
 function startAlgorithm()
 {
@@ -25,85 +25,110 @@ function startAlgorithm()
 	loadTrafficInformation(runAlgorithm);
 }
 
-function runAlgorithm(){
-
-		routes=findRoutes(routeFrom,routeTo,traffic_info);
+function runAlgorithm()
+{
+		routes=findRoutes(routeFrom,routeTo,routeInfo);
 		console.log('----the plotted routes are');
 		routes.forEach(function(route){
 			console.log(route);
 		});
 
 		console.log("-------Traffic Signal Optimitization algorithm - end --------------\n");
+}
 
-	}
 
-function areRoutePointsAvailableInTrafficInfo(routeFrom,routeTo)
+function plotRoutePoints(route,routeTo,route,routeInfo)
 {
-	console.log('----making sure the route points are available');
-	routeFromFlag=false;
-	routeToFlag=false;
-	traffic_info.forEach(function(trafficPoint){
-	
-		if(trafficPoint.signalFrom==routeFrom)
-		{
-			routeFromFlag=true;
-		}
-		else if(trafficPoint.signalTo==routeTo)
-		{
-			routeToFlag=true;
-		}
-	});
+   if(route.routePoints.length>0)
+   {
+   	 route.routePoints.push(plotRoutePoints(route,routeTo,route,routeInfo));
+   }
 
-	if(routeFromFlag & routeToFlag)
+   return route;
+}
+
+function createGraphFromData(routeInfo)
+{
+	graph={};
+	graph.startNode=null;
+	isFirstNode=true;
+	if(routeInfo!=null && routeInfo.length>0)
 	{
-		return true;
+		routeInfo.forEach(function(trafficNode){
+			if(isNodeInGraph(trafficNode.from))
+			{
+				node=createNodeForGraph(trafficNode.from);
+				node=findAndAddConnectingNodes(node,routeInfo);
+				if(isFirstNode)
+				{
+					graph.startNode=node;
+					isFirstNode=!isFirstNode;
+				}
+			}
+			
+		 });
+	}
+	return graph;
+}
+
+function isNodeInGraph(nodeName,graph)
+{
+	if(graph!=null && graph.nodes!=null && graph.nodes.length>0)
+	{   
+		flag=false;
+		
+		return flag;
 	}
 	else
 	{
 		return false;
 	}
+
 }
 
-function plotRoutePoints(route,routeTo,traffic_info)
+function findNodeInGraph(nodeName,node)
 {
-   //todo
-   return null;
+	if(node.name==nodeName)
+	{
+		return node;
+	}
+	if(node!=null && node.connections!=null)
+	{
+		for(i=0;i<node.connections.length;i++)
+		{
+			foundNode=findNodeInGraph(nodeName,node.connections[i]);
+			if(foundNode){
+				return foundNode;
+			}
+		}
+
+	}
+
+	return null;
 }
 
-function findRoutes(routeFrom,routeTo,traffic_info)
+function createNodeForGraph(nodeName)
+{
+	node={};
+	node.connections=[];
+	node.name=nodeName;
+	return node;
+}
+
+/* 
+ - create a graph from the data 
+ - traverse the graph to find out if there are connections to the destination.
+*/
+function findRoutes(routeFrom,routeTo,routeInfo)
 {
 	routes=[];
-	if(areRoutePointsAvailableInTrafficInfo(routeFrom,routeTo))
-	{
-		console.log('----Route points are available');
-		secondTrafficPoint=null;
-		traffic_info.forEach(function(trafficPoint){
-         
-         if(trafficPoint.signalFrom==routeFrom && trafficPoint.signalTo!=routeFrom && trafficPoint.signalTo!=routeTo && secondTrafficPoint!=routeTo)
-         {
-         	secondTrafficPoint=trafficPoint.signalTo;
-         	route={};
-         	route.routePoints=[];
-         	route.routePoints.push(trafficPoint);
-         	route=plotRoutePoints(route,routeTo,traffic_info);
-         	routes.push(route);
-         }
-         /*else
-         {
-         	route={};
-         	route.routePoints=[trafficPoint];
-            routes.push(route);
-         }*/
-
-	});
-	}
-	else
-	{
-		console.log('----Route points are not available');
-	}
+	trafficGraph=createGraphFromData(routeInfo);	
 	return routes;
 }
 
+/* loading traffic information from the csv file entries into a JSON object and then pushing all the JSON
+   objects into an array
+ */
 function loadTrafficInformation(callback)
 {
 	console.log('----Starting to load traffic data');
@@ -111,9 +136,8 @@ function loadTrafficInformation(callback)
 	var csvFilePath='trafficdata.csv';
 	
 	csv().fromFile(csvFilePath).on('json',(jsonObj)=>{
-	    // combine csv header row and csv line to a json object 
-	    // jsonObj.a ==> 1 or 4 
-	    traffic_info.push(jsonObj);
+	    
+	    routeInfo.push(jsonObj);
 	    //console.log(jsonObj);
 	})
 	.on('done',(error)=>{

@@ -18,11 +18,18 @@ var routeTo='P005';
 
 var traffic_info=[];
 var routes=[];
-+function startAlgorithm()
+function startAlgorithm()
 {
 	console.log("-------Traffic Signal Optimatization algorithm - start --------------\n");
 
-	loadTrafficInformation(function(){findRoute(routeFrom,routeTo,traffic_info)});
+	loadTrafficInformation(function(){
+
+		routes=findRoutes(routeFrom,routeTo,traffic_info);
+		console.log('the plotted routes are');
+		routes.forEach(function(route){
+			console.log(route);
+		});
+	});
 }
 
 
@@ -54,9 +61,10 @@ function areRoutePointsAvailableInTrafficInfo(routeFrom,routeTo)
 	}
 }
 
-function plotRoutePoints(route,routeTo,traffic_Info)
+function plotRoutePoints(route,routeTo,traffic_info)
 {
-
+   //todo
+   return null;
 }
 
 function findRoutes(routeFrom,routeTo,traffic_info)
@@ -68,20 +76,21 @@ function findRoutes(routeFrom,routeTo,traffic_info)
 		secondTrafficPoint=null;
 		traffic_info.forEach(function(trafficPoint){
          
-         if(trafficPoint.signalFrom==routeFrom && traffciPoint.signalTo!=routeFrom && trafficPoint.signalTo!=routeTo && secondTrafficPoint!=routeTo)
+         if(trafficPoint.signalFrom==routeFrom && trafficPoint.signalTo!=routeFrom && trafficPoint.signalTo!=routeTo && secondTrafficPoint!=routeTo)
          {
+         	secondTrafficPoint=trafficPoint.signalTo;
          	route={};
          	route.routePoints=[];
          	route.routePoints.push(trafficPoint);
-         	route=plotRoutePoints(route,routeTo,traffic_Info);
+         	route=plotRoutePoints(route,routeTo,traffic_info);
          	routes.push(route);
          }
-         else
+         /*else
          {
          	route={};
          	route.routePoints=[trafficPoint];
             routes.push(route);
-         }
+         }*/
 
 	});
 	}

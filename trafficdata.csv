@@ -1,0 +1,6 @@
+signalFrom,signalTo,distance,trafficStatus,signalTime
+P001,P002,2000,N,60
+P001,P003,1000,B,120
+P001,P004,3000,M,30
+P004,P005,1000,N,100
+P002,P005,2000,N,100

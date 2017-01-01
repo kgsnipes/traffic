@@ -1,0 +1,22 @@
+{
+  "name": "traffic",
+  "version": "1.0.0",
+  "description": "traffic",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kgsnipes/traffic.git"
+  },
+  "author": "kaushik ganguly",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kgsnipes/traffic/issues"
+  },
+  "homepage": "https://github.com/kgsnipes/traffic#readme",
+  "dependencies": {
+    "csvtojson": "^1.1.1"
+  }
+}
